@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:text="27/12/8888"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/tv_data"
+        android:textColor="@android:color/black"
+        android:textSize="24sp" />
+
+    <TextView
+        android:text="Corso Armando Diaz, 47, Alassio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_luogo"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:layout_below="@+id/tv_categ"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="Entrata"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_categ"
+        android:textSize="24sp"
+        android:textColor="@android:color/black"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/tv_data"
+        android:layout_marginLeft="14dp" />
+
+    <TextView
+        android:text="00000€"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:id="@+id/tv_imp"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/tv_categ" />
+
+</RelativeLayout>

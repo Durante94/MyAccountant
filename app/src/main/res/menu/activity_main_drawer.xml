@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/aggiunta"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Nuovo Conto" />
+        <item
+            android:id="@+id/dash"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Dashboard" />
+        <item
+            android:id="@+id/opzioni"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Opzioni" />
+        <item android:id="@+id/operazione"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Nuova Operazione"/>
+    </group>
+
+    <item android:title="Promemoria">
+        <menu>
+            <item
+                android:id="@+id/deb_cred"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Debito o Credito" />
+        </menu>
+    </item>
+
+</menu>

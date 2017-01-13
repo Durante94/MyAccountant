@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">MyAccountant</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string-array name="Tipo">
+        <item>Seleziona Tipo</item>
+        <item>Credito</item>
+        <item>Debito</item>
+    </string-array>
+    <string name="title_activity_dettaglio_conto">DettaglioConto</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.durante.fabrizio.myaccountant.DettaglioConto">
+    <item
+        android:id="@+id/delete"
+        android:orderInCategory="100"
+        android:title="Cancella Conto"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/operazione"
+        android:orderInCategory="100"
+        android:title="Nuova Operazione"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/modifica"
+        android:orderInCategory="100"
+        android:title="Modifica"
+        app:showAsAction="never"/>
+</menu>

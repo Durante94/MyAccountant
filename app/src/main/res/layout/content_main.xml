@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.durante.fabrizio.myaccountant.MainActivity"
+    tools:showIn="@layout/app_bar_main">
+
+
+    <TextView
+        android:text="Conto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ContoTW"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        android:layout_marginStart="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="Saldo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        android:layout_above="@+id/elenco_conti"
+        android:layout_toEndOf="@+id/LabelBil"
+        android:layout_marginStart="42dp" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ContoTW"
+        android:id="@+id/elenco_conti"/>
+
+    <TextView
+        android:text="Blancio Tot: "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/elenco_conti"
+        android:layout_alignStart="@+id/ContoTW"
+        android:layout_marginTop="5dp"
+        android:id="@+id/LabelBil"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        android:layout_marginBottom="5dp" />
+
+    <TextView
+        android:text="0€"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/BilTW"
+        android:layout_alignTop="@+id/LabelBil"
+        android:layout_toEndOf="@+id/ultimi_mov"
+        android:textColor="@android:color/black"
+        android:textSize="24sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ultimi_mov"
+        android:text="Ultimi movimenti:"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        android:layout_below="@+id/LabelBil"
+        android:layout_alignStart="@+id/LabelBil"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ultimi_mov"
+        android:layout_alignParentStart="true"
+        android:id="@+id/ultimi"/>
+
+</RelativeLayout>
