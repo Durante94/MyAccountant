@@ -45,6 +45,7 @@ public class MovimentiAdapter extends BaseAdapter {
         TextView Tipo=(TextView)view.findViewById(R.id.tv_categ);
         TextView Imp=(TextView)view.findViewById(R.id.tv_imp);
         TextView Dove=(TextView)view.findViewById(R.id.tv_luogo);
+        TextView ID=(TextView)view.findViewById(R.id.tv_id_movimento);
 
         Data.setText(list.get(position).getData());
         Tipo.setText(list.get(position).getCategoria());
@@ -53,6 +54,7 @@ public class MovimentiAdapter extends BaseAdapter {
             Dove.setText(list.get(position).getLuogo());
         else
             Dove.setText("Posizione sconosciuta");
+        ID.setText(list.get(position).getID());
         return view;
     }
 }

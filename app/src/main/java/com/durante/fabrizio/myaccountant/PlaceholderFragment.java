@@ -15,6 +15,9 @@ import android.widget.Toast;
 
 public class PlaceholderFragment extends Fragment {
 
+    private TextView NomeConto;
+    private TextView Saldo;
+
     public PlaceholderFragment() {
     }
 
@@ -32,8 +35,8 @@ public class PlaceholderFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_dettaglio_conto, container, false);
 
-        TextView NomeConto=(TextView)rootView.findViewById(R.id.tv_NomeC);
-        TextView Saldo=(TextView)rootView.findViewById(R.id.tv_Saldo);
+        NomeConto=(TextView)rootView.findViewById(R.id.tv_NomeC);
+        Saldo=(TextView)rootView.findViewById(R.id.tv_Saldo);
         DBHelper db=new DBHelper(getContext());
 
         Cursor ris=db.get_Conto(getArguments().getInt("Conto"));
@@ -45,5 +48,9 @@ public class PlaceholderFragment extends Fragment {
         Saldo.setText(ris.getString(1));
 
         return rootView;
+    }
+
+    public void update_Nome(String nome){
+        NomeConto.setText(nome);
     }
 }

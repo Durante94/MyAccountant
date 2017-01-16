@@ -5,14 +5,23 @@ package com.durante.fabrizio.myaccountant;
  */
 
 public class MovimentoSingolo {
-    private String Luogo, Categoria, Data;
+    private String Luogo, Categoria, Data, ID;
     private float Importo;
 
-    public MovimentoSingolo(String data, String categoria, float importo, String luogo) {
+    public MovimentoSingolo(String id, String data, String categoria, float importo, String luogo) {
         Luogo = luogo;
         Categoria = categoria;
         Data = data;
         Importo = importo;
+        ID=id;
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
     }
 
     public String getLuogo() {

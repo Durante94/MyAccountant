@@ -42,6 +42,8 @@ public class DettaglioConto extends AppCompatActivity {
     private ViewPager mViewPager;
     private static int conto;
     private static DBHelper db;
+    private PlaceholderFragment def;
+    private MovimentiConto tab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,13 +169,7 @@ public class DettaglioConto extends AppCompatActivity {
                         else{
                             if(db.update_Conto(conto, nome)){
                                 Toast.makeText(getApplicationContext(), "Modifica effettuata", Toast.LENGTH_LONG).show();
-
-                                Fragment frg = getSupportFragmentManager().findFragmentById(R.id.container);
-                                final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                                ft.detach(frg);
-                                ft.attach(frg);
-                                ft.commit();
-
+                                def.update_Nome(nome);
                                 dialog.dismiss();
                             }else{
                                 Toast.makeText(getApplicationContext(), "Modifica fallita", Toast.LENGTH_LONG).show();
@@ -210,15 +206,15 @@ public class DettaglioConto extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position){
                 case 0:{
-                    PlaceholderFragment def= PlaceholderFragment.newInstance(conto);
+                    def= PlaceholderFragment.newInstance(conto);
                     return def;
                 }
                 case 1:{
-                    MovimentiConto tab=MovimentiConto.newInstance(conto);
+                    tab=MovimentiConto.newInstance(conto);
                     return tab;
                 }
                 default:{
-                    PlaceholderFragment def= PlaceholderFragment.newInstance(conto);
+                    def= PlaceholderFragment.newInstance(conto);
                     return def;
                 }
             }
