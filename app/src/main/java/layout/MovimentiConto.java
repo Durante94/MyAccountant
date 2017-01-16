@@ -62,7 +62,7 @@ public class MovimentiConto extends Fragment {
         elenco.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //int id_Mov=Integer.parseInt(view.findViewById(R.id.tv_id_movimento).getText().toString());
+                //int id_Mov=Integer.parseInt(parent.getAdapter().getItem(position));
                 //startActivity(new Intent(getContext(), MappaMovimento.class).putExtra("Movim", id_Mov));
             }
         });
