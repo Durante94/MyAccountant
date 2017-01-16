@@ -23,7 +23,8 @@
         android:textSize="24sp"
         android:layout_marginStart="20dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:paddingBottom="20dp" />
 
     <TextView
         android:text="Saldo"
@@ -34,7 +35,8 @@
         android:textSize="24sp"
         android:layout_above="@+id/elenco_conti"
         android:layout_toEndOf="@+id/LabelBil"
-        android:layout_marginStart="42dp" />
+        android:layout_marginStart="42dp"
+        android:paddingBottom="20dp" />
 
     <ListView
         android:layout_width="match_parent"
@@ -52,7 +54,8 @@
         android:id="@+id/LabelBil"
         android:textColor="@android:color/black"
         android:textSize="24sp"
-        android:layout_marginBottom="5dp" />
+        android:layout_marginBottom="5dp"
+        android:paddingTop="20dp" />
 
     <TextView
         android:text="0€"
@@ -62,7 +65,8 @@
         android:layout_alignTop="@+id/LabelBil"
         android:layout_toEndOf="@+id/ultimi_mov"
         android:textColor="@android:color/black"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:paddingTop="20dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -74,13 +78,15 @@
         android:layout_below="@+id/LabelBil"
         android:layout_alignStart="@+id/LabelBil"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp" />
+        android:layout_marginBottom="5dp"
+        android:paddingTop="40dp" />
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ultimi_mov"
         android:layout_alignParentStart="true"
-        android:id="@+id/ultimi"/>
+        android:id="@+id/ultimi"
+        android:paddingTop="20dp" />
 
 </RelativeLayout>

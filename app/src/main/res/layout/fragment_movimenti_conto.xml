@@ -8,5 +8,8 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/lista_movimenti" />
+        android:id="@+id/lista_movimenti"
+        android:paddingTop="20dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="5dp" />
 </FrameLayout>

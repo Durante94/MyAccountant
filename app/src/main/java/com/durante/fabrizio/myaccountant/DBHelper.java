@@ -169,8 +169,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public Cursor get_Movim(int conto){
         SQLiteDatabase db=this.getWritableDatabase();
-        Cursor ris=db.rawQuery("SELECT "+PAY_DATA+", "+PAY_CATEGORIA+", "+PAY_IMPORTO+", "+PAY_LUOGO+" " +
-                "FROM "+TABLE_PAY+" " +
+        Cursor ris=db.rawQuery("SELECT * FROM "+TABLE_PAY+" " +
                 "WHERE "+PAY_EK+"=?", new String[]{Integer.toString(conto)});
         return ris;
     }
@@ -189,6 +188,35 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues cv=new ContentValues();
         cv.put(CONTO_NOME, nome);
         if(db.update(TABLE_CONTO, cv, CONTO_PK+"=?", new String[]{Integer.toString(conto)})>0)
+            return true;
+        else
+            return false;
+    }
+
+    public Cursor get_singol_Movim(int movim){
+        SQLiteDatabase db=this.getWritableDatabase();
+        Cursor ris=db.rawQuery("SELECT P."+PAY_DATA+", P."+PAY_CATEGORIA+", P."+PAY_IMPORTO+", P."+PAY_LUOGO+", C."+CONTO_NOME+", P."+PAY_PK+" "+
+                "FROM "+TABLE_PAY+" AS P "+TABLE_CONTO+" AS C "+
+                "WHERE P."+PAY_EK+"=C."+CONTO_PK+" AND P."+PAY_PK+"=?", new String[]{Integer.toString(movim)});
+        return ris;
+    }
+
+    public boolean delete_Mov(int mov){
+        SQLiteDatabase db=this.getWritableDatabase();
+        if(db.delete(TABLE_PAY, PAY_PK+"=?", new String[]{Integer.toString(mov)})==0)
+            return false;
+        else
+            return true;
+    }
+
+    public boolean update_Mov(int id, float imp, String data, String tipo, String dove){
+        SQLiteDatabase db=this.getWritableDatabase();
+        ContentValues cv=new ContentValues();
+        cv.put(PAY_IMPORTO, imp);
+        cv.put(PAY_DATA, data);
+        cv.put(PAY_CATEGORIA, tipo);
+        cv.put(PAY_LUOGO, dove);
+        if(db.update(TABLE_PAY, cv, PAY_PK+"=?", new String[]{Integer.toString(id)})>0)
             return true;
         else
             return false;

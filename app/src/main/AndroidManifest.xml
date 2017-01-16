@@ -54,11 +54,12 @@
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="com.durante.fabrizio.myaccountant.DettaglioConto"/>
+                <action android:name="com.durante.fabrizio.myaccountant.DettaglioConto" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".MappaMovimento"></activity>
     </application>
 
 </manifest>

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -157,11 +158,22 @@ public class DettaglioConto extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String nome=input.getText().toString();
+                        if(nome.length()==0){
+                            Toast.makeText(getApplicationContext(), "Inserire una denominazione", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         if(db.get_Conto(nome))
                             Toast.makeText(getApplicationContext(), nome+" è già in uso, sceglierne un altro", Toast.LENGTH_LONG).show();
                         else{
                             if(db.update_Conto(conto, nome)){
                                 Toast.makeText(getApplicationContext(), "Modifica effettuata", Toast.LENGTH_LONG).show();
+
+                                Fragment frg = getSupportFragmentManager().findFragmentById(R.id.container);
+                                final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                                ft.detach(frg);
+                                ft.attach(frg);
+                                ft.commit();
+
                                 dialog.dismiss();
                             }else{
                                 Toast.makeText(getApplicationContext(), "Modifica fallita", Toast.LENGTH_LONG).show();

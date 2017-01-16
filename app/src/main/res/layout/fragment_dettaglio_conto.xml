@@ -16,7 +16,8 @@
         android:layout_alignParentStart="true"
         android:id="@+id/label_intestazione"
         android:textColor="@android:color/black"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:paddingTop="20dp" />
 
     <TextView
         android:text="NomeConto"
@@ -38,7 +39,8 @@
         android:textColor="@android:color/black"
         android:textSize="24sp"
         android:layout_below="@+id/label_intestazione"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:paddingTop="20dp" />
 
     <TextView
         android:text="Saldo"
@@ -50,7 +52,8 @@
         android:textSize="24sp"
         android:layout_below="@+id/tv_NomeC"
         android:layout_alignStart="@+id/tv_NomeC"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:paddingTop="20dp" />
 
     <TextView
         android:text="Grafico:"
@@ -61,5 +64,6 @@
         android:layout_marginTop="12dp"
         android:id="@+id/label_grafico"
         android:textColor="@android:color/black"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:paddingTop="20dp" />
 </RelativeLayout>

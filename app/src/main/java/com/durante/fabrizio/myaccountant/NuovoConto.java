@@ -42,6 +42,10 @@ public class NuovoConto extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Inserire un nome per il Conto", Toast.LENGTH_SHORT).show();
                             return;
                         }
+                        if(tempNome.length()>20){
+                            Toast.makeText(getApplicationContext(), "Inserire un nome più corto", Toast.LENGTH_LONG).show();
+                            return;
+                        }
 
                         float floatBil=0;
                         try {
