@@ -73,7 +73,7 @@ public class GpsTracker extends Service implements LocationListener {
 
                 //First get location from Network Provider
                 if (isNetworkEnabled) {
-                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         // TODO: Consider calling
                         //    ActivityCompat#requestPermissions
                         // here to request the missing permissions, and then overriding
@@ -116,6 +116,7 @@ public class GpsTracker extends Service implements LocationListener {
         } catch (Exception e) {
             //e.printStackTrace();
             Log.e("Error : Location", "Impossible to connect to LocationManager", e);
+            Toast.makeText(mContext, "Errore: "+e, Toast.LENGTH_LONG).show();
             Toast.makeText(mContext, "Assenza di copertura gps e internet, riprovare più tardi", Toast.LENGTH_LONG).show();
         }
 
