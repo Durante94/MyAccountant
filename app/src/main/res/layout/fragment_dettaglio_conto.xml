@@ -68,14 +68,23 @@
         android:textSize="24sp"
         android:paddingTop="20dp" />
 
-    <view
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        class="com.jjoe64.graphview.GraphView"
-        android:layout_below="@+id/label_grafico"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="18dp"
-        android:id="@+id/graph" />
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/label_grafico">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <com.jjoe64.graphview.helper.GraphViewXML
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="18dp"
+                android:id="@+id/graph"
+                app:seriesType="line"
+                app:seriesColor="#ee0000"
+                app:seriesData="0=5;2=5;3=0;4=2"/>
+        </RelativeLayout>
+    </ScrollView>
 
 </RelativeLayout>
