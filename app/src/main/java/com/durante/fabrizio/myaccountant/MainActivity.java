@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity
     private DBHelper MyDB;
     private ListView ElencoConti, UltimiMov;
     private TextView SaldoTot;
+    int[] idMov;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity
         Cursor righe=MyDB.get_Conti();
         ContoAdapter adpt;
         MovimentoAdapter adpt2;
+        idMov=new int[10];
 
         if(righe.getCount()<=0){
             ArrayAdapter<TextView> adapter=new ArrayAdapter<TextView>(this, R.layout.noconti_layout);
@@ -89,9 +91,10 @@ public class MainActivity extends AppCompatActivity
         }else{
             ElementoListaMovimenti temp;
             ArrayList<ElementoListaMovimenti> list=new ArrayList<ElementoListaMovimenti>();
-            while (righe.moveToNext()){
+            for (int i=0; righe.moveToNext(); i++){
                 temp=new ElementoListaMovimenti(righe.getString(0), righe.getString(1), righe.getFloat(2));
                 list.add(temp);
+                idMov[i]=righe.getInt(3);
             }
             adpt2=new MovimentoAdapter(this, list);
             UltimiMov.setAdapter(adpt2);
@@ -106,6 +109,13 @@ public class MainActivity extends AppCompatActivity
                 Bundle bundle=new Bundle();
                 bundle.putString("Parent", "MainActivity");
                 startActivity(new Intent(MainActivity.this, DettaglioConto.class).putExtra("Conto", position+1));
+            }
+        });
+
+        UltimiMov.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startActivity(new Intent(MainActivity.this, MappaMovimento.class).putExtra("Movim", idMov[position]));
             }
         });
     }

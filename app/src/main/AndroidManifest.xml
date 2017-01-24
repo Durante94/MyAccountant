@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.durante.fabrizio.myaccountant">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -59,7 +63,24 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".MappaMovimento"></activity>
+        <activity
+            android:name=".MappaMovimento"
+            android:parentActivityName=".DettaglioConto"
+            android:label="Dettaglio Movimento">
+            <intent-filter>
+                <action android:name="com.durante.fabrizio.myaccountant.MappaMovimento"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".ModificaMovimento"
+            android:label="Modifica Movimento">
+            <intent-filter>
+                <action android:name="com.durante.fabrizio.myaccountant.ModificaMovimento"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

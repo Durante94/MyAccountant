@@ -44,7 +44,7 @@ public class MovimentiConto extends Fragment {
         ListView elenco=(ListView)rootView.findViewById(R.id.lista_movimenti);
         DBHelper db=new DBHelper(getContext());
         MovimentiAdapter adapter;
-        Cursor ris=db.get_Movim(getArguments().getInt("Conto"));
+        final Cursor ris=db.get_Movim(getArguments().getInt("Conto"));
         if(ris.getCount()<=0){
             Toast.makeText(getContext(), "Nessun movimento!", Toast.LENGTH_LONG).show();
             return null;
@@ -62,8 +62,10 @@ public class MovimentiConto extends Fragment {
         elenco.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //int id_Mov=Integer.parseInt(parent.getAdapter().getItem(position));
-                //startActivity(new Intent(getContext(), MappaMovimento.class).putExtra("Movim", id_Mov));
+                if(ris.moveToPosition(position)) {
+                    int id_Mov=ris.getInt(0);
+                    startActivity(new Intent(getContext(), MappaMovimento.class).putExtra("Movim", id_Mov).putExtra("Conto", getArguments().getInt("Conto")));
+                }
             }
         });
 

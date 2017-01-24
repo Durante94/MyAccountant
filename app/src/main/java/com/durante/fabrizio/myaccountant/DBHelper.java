@@ -9,6 +9,10 @@ import android.support.annotation.IntegerRes;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 /**
  * Created by Fabrizio on 29/12/2016.
  */
@@ -32,9 +36,13 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String CONTO_BIL_IN="Bilancio_Iniziale";
     public static final String CONTO_BIL_FIN="Bilancio_Finale";
     public static final String CONTO_NOME="Nome";
+    public static final String CONTO_DATA_CREA="Data_Creazione";
+
+    private Context c;
 
     public DBHelper(Context context) {
         super(context, DB_NAME, null, 1);
+        c=context;
     }
 
     @Override
@@ -52,7 +60,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 ""+CONTO_PK+" INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 ""+CONTO_BIL_IN+" REAL, " +
                 ""+CONTO_BIL_FIN+" REAL, "+
-                ""+CONTO_NOME+" TEXT)";
+                ""+CONTO_NOME+" TEXT, " +
+                ""+CONTO_DATA_CREA+" TEXT)";
         db.execSQL(sql);
     }
 
@@ -65,10 +74,13 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public boolean InsertConto(float bil, String nome){
         SQLiteDatabase db=this.getWritableDatabase();
+        Calendar cal=new GregorianCalendar();
+        String creazione= cal.get(Calendar.DAY_OF_MONTH)+"/"+cal.get(Calendar.MONTH)+1+"/"+cal.get(Calendar.YEAR);
         ContentValues cv=new ContentValues();
         cv.put(CONTO_BIL_IN, bil);
         cv.put(CONTO_BIL_FIN, bil);
         cv.put(CONTO_NOME, nome);
+        cv.put(CONTO_DATA_CREA, creazione);
         if (db.insert(TABLE_CONTO, null, cv)==-1)
             return false;
         else
@@ -111,7 +123,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public Cursor get_Pay(){
         SQLiteDatabase db=this.getWritableDatabase();
-        Cursor ris=db.rawQuery("SELECT C."+CONTO_NOME+", P."+PAY_CATEGORIA+", P."+PAY_IMPORTO+" " +
+        Cursor ris=db.rawQuery("SELECT C."+CONTO_NOME+", P."+PAY_CATEGORIA+", P."+PAY_IMPORTO+", P."+PAY_PK+" " +
                                 "FROM "+TABLE_CONTO+" AS C, "+TABLE_PAY+" AS P" +
                                 " WHERE P."+PAY_EK+"=C."+CONTO_PK+" LIMIT 10" , null);
         return ris;
@@ -119,28 +131,30 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public boolean Aggiorna(int conto){
         SQLiteDatabase db=this.getWritableDatabase();
-        long entrate=0, uscite=0, bil;
+        float entrate=0, uscite=0, bil;
         Cursor ris=db.rawQuery("SELECT SUM(P."+PAY_IMPORTO+")\n" +
                 "FROM "+TABLE_PAY+" as P INNER JOIN "+TABLE_CONTO+" as C ON P."+PAY_EK+"=C."+CONTO_PK+"\n" +
                 "WHERE C."+CONTO_PK+"=? AND P."+PAY_CATEGORIA+"=?",
                 new String[]{Integer.toString(conto), "Entrata"});
         ris.moveToFirst();
-        entrate=ris.getInt(ris.getPosition());
+        entrate=ris.getFloat(0);
 
         ris=db.rawQuery("SELECT SUM(P."+PAY_IMPORTO+")\n" +
                         "FROM "+TABLE_PAY+" as P INNER JOIN "+TABLE_CONTO+" as C ON P."+PAY_EK+"=C."+CONTO_PK+"\n" +
                         "WHERE C."+CONTO_PK+"=? AND P."+PAY_CATEGORIA+"=?",
                 new String[]{Integer.toString(conto), "Uscita"});
         ris.moveToFirst();
-        uscite=ris.getInt(ris.getPosition());
+        uscite=ris.getFloat(0);
 
         ris=db.rawQuery("SELECT "+CONTO_BIL_IN+"\n" +
                 "FROM "+TABLE_CONTO+"\n" +
                 "WHERE "+CONTO_PK+"=?", new String[]{Integer.toString(conto)});
-        if(ris.moveToFirst())
+        if(!ris.moveToFirst()){
+            Toast.makeText(c, "Non trovo il bilancio iniziale del conto", Toast.LENGTH_LONG).show();
             return false;
+        }
 
-        bil=ris.getInt(ris.getPosition())+entrate-uscite;
+        bil=ris.getFloat(0)+entrate-uscite;
 
         ContentValues cv=new ContentValues();
         cv.put(CONTO_BIL_FIN, bil);
@@ -161,7 +175,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public Cursor get_Conto(int conto){
         SQLiteDatabase db=this.getWritableDatabase();
-        Cursor ris=db.rawQuery("SELECT "+CONTO_NOME+", "+CONTO_BIL_FIN+"\n" +
+        Cursor ris=db.rawQuery("SELECT "+CONTO_NOME+", "+CONTO_BIL_FIN+", "+CONTO_DATA_CREA+", "+CONTO_BIL_IN+"\n" +
                 "FROM "+TABLE_CONTO+" \n" +
                 "WHERE "+CONTO_PK+"=?", new String[]{Integer.toString(conto)});
         return ris;
@@ -196,7 +210,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public Cursor get_singol_Movim(int movim){
         SQLiteDatabase db=this.getWritableDatabase();
         Cursor ris=db.rawQuery("SELECT P."+PAY_DATA+", P."+PAY_CATEGORIA+", P."+PAY_IMPORTO+", P."+PAY_LUOGO+", C."+CONTO_NOME+", P."+PAY_PK+" "+
-                "FROM "+TABLE_PAY+" AS P "+TABLE_CONTO+" AS C "+
+                "FROM "+TABLE_PAY+" AS P, "+TABLE_CONTO+" AS C "+
                 "WHERE P."+PAY_EK+"=C."+CONTO_PK+" AND P."+PAY_PK+"=?", new String[]{Integer.toString(movim)});
         return ris;
     }
@@ -220,5 +234,22 @@ public class DBHelper extends SQLiteOpenHelper {
             return true;
         else
             return false;
+    }
+
+    public ArrayList<Dato> grafo(int conto){
+        ArrayList<Dato> Valori=new ArrayList<>();
+        Cursor ris=get_Conto(conto);
+        if(!ris.moveToFirst())
+            return null;
+        Valori.add(new Dato(ris.getDouble(2), ris.getDouble(3)));
+
+        ris=get_Movim(conto);
+        if(ris.getCount()<=0){
+            while (ris.moveToNext()){
+                Valori.add(new Dato(ris.getDouble(2), ris.getDouble(1)));
+            }
+        }
+
+        return Valori;
     }
 }

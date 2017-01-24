@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -38,12 +39,23 @@ public class ContoAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        int pos;
+        String temp;
         View v=View.inflate(context, R.layout.elemento_lista_conti, null);
         TextView nomeC=(TextView)v.findViewById(R.id.twNomeConto);
         TextView bilC=(TextView)v.findViewById(R.id.twBilancio);
+        try{
+            temp=Float.toString(list.get(position).getBilancio());
+        }catch (NumberFormatException e){
+            Toast.makeText(context, "Non riesco a convertire l'importo", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+        //musse per tagliare la stringa importo...
+        pos=temp.indexOf(".");
+        temp=temp.substring(0, pos+2);
 
         nomeC.setText(list.get(position).getNome());
-        bilC.setText(Float.toString(list.get(position).getBilancio())+" €");
+        bilC.setText(temp+" €");
 
         return v;
     }

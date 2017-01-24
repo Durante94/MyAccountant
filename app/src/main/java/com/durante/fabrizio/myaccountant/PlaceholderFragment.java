@@ -9,6 +9,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
+
 /**
  * Created by Fabrizio on 09/01/2017.
  */
@@ -17,6 +21,7 @@ public class PlaceholderFragment extends Fragment {
 
     private TextView NomeConto;
     private TextView Saldo;
+    private GraphView graph;
 
     public PlaceholderFragment() {
     }
@@ -37,7 +42,9 @@ public class PlaceholderFragment extends Fragment {
 
         NomeConto=(TextView)rootView.findViewById(R.id.tv_NomeC);
         Saldo=(TextView)rootView.findViewById(R.id.tv_Saldo);
+        graph = (GraphView)rootView.findViewById(R.id.graph);
         DBHelper db=new DBHelper(getContext());
+        LineGraphSeries<DataPoint> series = new LineGraphSeries();
 
         Cursor ris=db.get_Conto(getArguments().getInt("Conto"));
         if(!ris.moveToFirst()){
