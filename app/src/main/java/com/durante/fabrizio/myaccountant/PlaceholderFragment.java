@@ -50,6 +50,7 @@ public class PlaceholderFragment extends Fragment {
         if(!ris.moveToFirst()){
             Toast.makeText(getContext(), "Conto inesistente!", Toast.LENGTH_LONG).show();
             return null;
+            //DFFHGF
         }
         NomeConto.setText(ris.getString(0));
         Saldo.setText(ris.getString(1));
