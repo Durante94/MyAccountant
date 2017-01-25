@@ -9,12 +9,18 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.maps.GoogleMap;
+
 public class MappaMovimento extends AppCompatActivity {
 
     private TextView Data, Conto, Importo, Tipo;
     private String mappa;
     private DBHelper db;
-    public Bundle args;
+    private Bundle args;
+    private boolean mShowMAp;
+    private GoogleMap mMap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +33,7 @@ public class MappaMovimento extends AppCompatActivity {
         Tipo=(TextView)findViewById(R.id.tv_tipo_movimento);
         db=new DBHelper(this);
         args=getIntent().getExtras();
+        //mShowMAp= GooglePlayServiceUtility.isPlayServiceAviable(this);
 
         Cursor ris=db.get_singol_Movim(args.getInt("Movim"));
         if(ris.getCount()<=0){
