@@ -95,12 +95,13 @@
         android:textColor="@android:color/black"
         android:textSize="24sp" />
 
-    <fragment
+    <com.google.android.gms.maps.MapFragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/map"
         android:layout_below="@+id/label_tipo"
+        android:layout_alignParentStart="true"
         android:layout_marginTop="20dp"
-        class="com.google.android.gms.maps.MapFragment"/>
+        android:id="@+id/Mappa" />
+
 
 </RelativeLayout>
