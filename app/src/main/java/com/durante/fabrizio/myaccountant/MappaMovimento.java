@@ -12,10 +12,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 
 public class MappaMovimento extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -23,6 +26,7 @@ public class MappaMovimento extends AppCompatActivity implements OnMapReadyCallb
     private GoogleMap mappa;
     private DBHelper db;
     private Bundle args;
+    private Cursor ris;
 
 
     @Override
@@ -30,6 +34,7 @@ public class MappaMovimento extends AppCompatActivity implements OnMapReadyCallb
         super.onCreate(savedInstanceState);
         if(googleServicesAviable()){
             setContentView(R.layout.activity_mappa_movimento);
+            initMap();
         }else {
             Toast.makeText(this, "Impossibile creare la mappa", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(MappaMovimento.this, MainActivity.class));
@@ -45,7 +50,7 @@ public class MappaMovimento extends AppCompatActivity implements OnMapReadyCallb
         args = getIntent().getExtras();
 
 
-        Cursor ris=db.get_singol_Movim(args.getInt("Movim"));
+        ris=db.get_singol_Movim(args.getInt("Movim"));
         if(ris.getCount()<=0){
             Toast.makeText(this, "Movimento inesistente!", Toast.LENGTH_LONG);
             return;
@@ -56,8 +61,6 @@ public class MappaMovimento extends AppCompatActivity implements OnMapReadyCallb
         Conto.setText(ris.getString(4));
         Importo.setText(ris.getString(2));
         Tipo.setText(ris.getString(1));
-
-        //String stringMap=ris.getString(3);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -113,5 +116,14 @@ public class MappaMovimento extends AppCompatActivity implements OnMapReadyCallb
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mappa=googleMap;
+        goToLocation();
+    }
+
+    private void goToLocation() {
+        String stringMap=ris.getString(3);
+        int trunc=stringMap.indexOf(" ");
+        LatLng pos=new LatLng(Double.parseDouble(stringMap.substring(0, trunc-1)), Double.parseDouble(stringMap.substring(trunc+1)));
+        CameraUpdate update= CameraUpdateFactory.newLatLngZoom(pos, 17);
+        mappa.moveCamera(update);
     }
 }
