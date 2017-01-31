@@ -32,13 +32,16 @@ public class MappaMovimento extends AppCompatActivity implements OnMapReadyCallb
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(googleServicesAviable()){
+        if(googleServicesAvilable()){
             setContentView(R.layout.activity_mappa_movimento);
             initMap();
         }else {
             Toast.makeText(this, "Impossibile creare la mappa", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(MappaMovimento.this, MainActivity.class));
-            return;
+            setContentView(R.layout.layout_no_mappa);
+
+            //soluzione brutale:
+            //startActivity(new Intent(MappaMovimento.this, MainActivity.class));
+            //return;
         }
 
         Data = (TextView) findViewById(R.id.tv_data_movimento);
@@ -57,10 +60,11 @@ public class MappaMovimento extends AppCompatActivity implements OnMapReadyCallb
         }
 
         ris.moveToFirst();
-        Data.setText(ris.getString(0));
-        Conto.setText(ris.getString(4));
-        Importo.setText(ris.getString(2));
-        Tipo.setText(ris.getString(1));
+        Toast.makeText(this, "Data: "+ris.getString(0), Toast.LENGTH_SHORT).show();
+        //Data.setText(ris.getString(0));
+        //Conto.setText(ris.getString(4));
+        //Importo.setText(ris.getString(2));
+        //Tipo.setText(ris.getString(1));
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -94,17 +98,16 @@ public class MappaMovimento extends AppCompatActivity implements OnMapReadyCallb
         return super.onOptionsItemSelected(item);
     }
 
-    public boolean googleServicesAviable(){
+    public boolean googleServicesAvilable(){
         GoogleApiAvailability api=GoogleApiAvailability.getInstance();
-        int isAviable=api.isGooglePlayServicesAvailable(this);
-        if(isAviable== ConnectionResult.SUCCESS){
+        int isAvilable=api.isGooglePlayServicesAvailable(this);
+        if(isAvilable== ConnectionResult.SUCCESS)
             return true;
-        }else if (api.isUserResolvableError(isAviable)){
-            Dialog d=api.getErrorDialog(this, isAviable, 0);
+        else if (api.isUserResolvableError(isAvilable)){
+            Dialog d=api.getErrorDialog(this, isAvilable, 0);
             d.show();
-        }else {
+        }else
             Toast.makeText(this, "Impossibile connettersi a Google Play Servicies", Toast.LENGTH_SHORT).show();
-        }
         return false;
     }
 
@@ -116,11 +119,13 @@ public class MappaMovimento extends AppCompatActivity implements OnMapReadyCallb
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mappa=googleMap;
-        goToLocation();
+        //goToLocation();
     }
 
     private void goToLocation() {
         String stringMap=ris.getString(3);
+        if(stringMap.isEmpty())
+            return;
         int trunc=stringMap.indexOf(" ");
         LatLng pos=new LatLng(Double.parseDouble(stringMap.substring(0, trunc-1)), Double.parseDouble(stringMap.substring(trunc+1)));
         CameraUpdate update= CameraUpdateFactory.newLatLngZoom(pos, 17);

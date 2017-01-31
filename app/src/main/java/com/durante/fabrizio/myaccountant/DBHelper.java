@@ -235,21 +235,4 @@ public class DBHelper extends SQLiteOpenHelper {
         else
             return false;
     }
-
-    public ArrayList<Dato> grafo(int conto){
-        ArrayList<Dato> Valori=new ArrayList<>();
-        Cursor ris=get_Conto(conto);
-        if(!ris.moveToFirst())
-            return null;
-        Valori.add(new Dato(ris.getDouble(2), ris.getDouble(3)));
-
-        ris=get_Movim(conto);
-        if(ris.getCount()<=0){
-            while (ris.moveToNext()){
-                Valori.add(new Dato(ris.getDouble(2), ris.getDouble(1)));
-            }
-        }
-
-        return Valori;
-    }
 }
