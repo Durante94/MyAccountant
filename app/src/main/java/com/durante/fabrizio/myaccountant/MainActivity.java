@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             }
             case R.id.dash:{
-                //nuova activity
+                //qui nulla
                 break;
             }
             case R.id.opzioni:{

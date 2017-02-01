@@ -38,17 +38,12 @@ public class MappaMovimento extends AppCompatActivity implements OnMapReadyCallb
         }else {
             Toast.makeText(this, "Impossibile creare la mappa", Toast.LENGTH_SHORT).show();
             setContentView(R.layout.layout_no_mappa);
-
-            //soluzione brutale:
-            //startActivity(new Intent(MappaMovimento.this, MainActivity.class));
-            //return;
         }
 
         Data = (TextView) findViewById(R.id.tv_data_movimento);
         Conto = (TextView) findViewById(R.id.tv_conto_movimento);
         Importo = (TextView) findViewById(R.id.tv_importo_movimento);
         Tipo = (TextView) findViewById(R.id.tv_tipo_movimento);
-        //mappa=(()findViewById(R.id.Mappa)).getMap();
         db = new DBHelper(this);
         args = getIntent().getExtras();
 
@@ -60,11 +55,10 @@ public class MappaMovimento extends AppCompatActivity implements OnMapReadyCallb
         }
 
         ris.moveToFirst();
-        Toast.makeText(this, "Data: "+ris.getString(0), Toast.LENGTH_SHORT).show();
-        //Data.setText(ris.getString(0));
-        //Conto.setText(ris.getString(4));
-        //Importo.setText(ris.getString(2));
-        //Tipo.setText(ris.getString(1));
+        Data.setText(ris.getString(0));
+        Conto.setText(ris.getString(4));
+        Importo.setText(ris.getString(2));
+        Tipo.setText(ris.getString(1));
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -92,7 +92,6 @@ public class NuovaOperazione extends AppCompatActivity {
                 String data = Data.getText().toString();
                 String luogo = Luogo.getText().toString();
 
-                Toast.makeText(getApplicationContext(), "ID conto: "+conto, Toast.LENGTH_SHORT).show();
                 if (stringImp.length() <= 0) {
                     Toast.makeText(getApplicationContext(), "Inserire un importo", Toast.LENGTH_LONG).show();
                     return;
@@ -221,7 +220,7 @@ public class NuovaOperazione extends AppCompatActivity {
                     Tipo.setChecked(false);
                 Data.setText(day);
             }
-            extra.clear();
+            extra=null;
         }
 
         setListener();

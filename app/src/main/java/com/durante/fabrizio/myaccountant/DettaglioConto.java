@@ -2,10 +2,14 @@ package com.durante.fabrizio.myaccountant;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,7 +28,7 @@ import android.widget.Toast;
 
 import layout.MovimentiConto;
 
-public class DettaglioConto extends AppCompatActivity {
+public class DettaglioConto extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -44,6 +48,7 @@ public class DettaglioConto extends AppCompatActivity {
     private static DBHelper db;
     private PlaceholderFragment def;
     private MovimentiConto tab;
+    private Bundle args;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +57,17 @@ public class DettaglioConto extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        /*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();*/
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -72,7 +88,13 @@ public class DettaglioConto extends AppCompatActivity {
             }
         });
 
-        conto=getIntent().getExtras().getInt("Conto");
+        args=getIntent().getExtras();
+        if(args!=null)
+            conto =args.getInt("Conto");
+        else{
+            Toast.makeText(this, "Non trovo il conto!", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(DettaglioConto.this, MainActivity.class));
+        }
         db=new DBHelper(this);
     }
 
@@ -190,6 +212,38 @@ public class DettaglioConto extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id){
+            case R.id.aggiunta:{
+                startActivity(new Intent(DettaglioConto.this, NuovoConto.class));
+                break;
+            }
+            case R.id.dash:{
+                startActivity(new Intent(DettaglioConto.this, MainActivity.class));
+                break;
+            }
+            case R.id.opzioni:{
+                //nuova activity
+                break;
+            }
+            case R.id.deb_cred:{
+                startActivity(new Intent(DettaglioConto.this, DebCredActivity.class));
+                break;
+            }
+            case R.id.operazione:{
+                startActivity(new Intent(DettaglioConto.this, NuovaOperazione.class));
+                break;
+            }
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     /**
