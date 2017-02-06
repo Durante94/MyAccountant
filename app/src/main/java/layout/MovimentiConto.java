@@ -64,11 +64,16 @@ public class MovimentiConto extends Fragment {
         while (ris.moveToNext()){
             try {
                 int trunc=ris.getString(3).indexOf(" ");
-                indirizzi = gc.getFromLocation(Double.parseDouble(ris.getString(3).substring(0, trunc-1)), Double.parseDouble(ris.getString(3).substring(trunc+1)), 1);
+                String lat=ris.getString(3).substring(0, trunc-1), lng=ris.getString(3).substring(trunc+1);
+                indirizzi = gc.getFromLocation(Double.parseDouble(lat), Double.parseDouble(lng), 1);
                 address = indirizzi.get(0);
                 luogo = address.getAddressLine(0)+", "+address.getLocality();
-            } catch (IOException e) {
-                Toast.makeText(getContext(), "Non riesco a trovare il luogo inserito", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                if(e instanceof IOException)
+                    Toast.makeText(getContext(), "Non riesco a trovare il luogo inserito", Toast.LENGTH_SHORT).show();
+                else if(e instanceof StringIndexOutOfBoundsException) {
+                    //nulla, non elaboro niente se non è stata registrata alcuna posizione
+                }
             }
             temp=new MovimentoSingolo(ris.getString(0), ris.getString(2), ris.getString(4), ris.getFloat(1), luogo);
             list.add(temp);
