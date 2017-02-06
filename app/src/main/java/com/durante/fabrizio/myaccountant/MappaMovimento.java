@@ -113,7 +113,7 @@ public class MappaMovimento extends AppCompatActivity implements OnMapReadyCallb
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mappa=googleMap;
-        //goToLocation();
+        goToLocation();
     }
 
     private void goToLocation() {

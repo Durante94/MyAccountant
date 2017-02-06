@@ -1,7 +1,10 @@
 package layout;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -18,7 +21,9 @@ import com.durante.fabrizio.myaccountant.MovimentiAdapter;
 import com.durante.fabrizio.myaccountant.MovimentoSingolo;
 import com.durante.fabrizio.myaccountant.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MovimentiConto extends Fragment {
@@ -52,8 +57,20 @@ public class MovimentiConto extends Fragment {
 
         MovimentoSingolo temp;
         ArrayList<MovimentoSingolo> list=new ArrayList<MovimentoSingolo>();
+        String luogo="";
+        Geocoder gc = new Geocoder(getContext());
+        List<Address> indirizzi = null;
+        Address address;
         while (ris.moveToNext()){
-            temp=new MovimentoSingolo(ris.getString(0), ris.getString(2), ris.getString(4), ris.getFloat(1), ris.getString(3));
+            try {
+                int trunc=ris.getString(3).indexOf(" ");
+                indirizzi = gc.getFromLocation(Double.parseDouble(ris.getString(3).substring(0, trunc-1)), Double.parseDouble(ris.getString(3).substring(trunc+1)), 1);
+                address = indirizzi.get(0);
+                luogo = address.getAddressLine(0)+", "+address.getLocality();
+            } catch (IOException e) {
+                Toast.makeText(getContext(), "Non riesco a trovare il luogo inserito", Toast.LENGTH_SHORT).show();
+            }
+            temp=new MovimentoSingolo(ris.getString(0), ris.getString(2), ris.getString(4), ris.getFloat(1), luogo);
             list.add(temp);
         }
         adapter=new MovimentiAdapter(getContext(), list);

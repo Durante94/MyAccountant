@@ -1,5 +1,13 @@
 package com.durante.fabrizio.myaccountant;
 
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
+import android.widget.Toast;
+
+import java.io.IOException;
+import java.util.List;
+
 /**
  * Created by Fabrizio on 10/01/2017.
  */
@@ -9,7 +17,7 @@ public class MovimentoSingolo {
     private float Importo;
 
     public MovimentoSingolo(String id, String data, String categoria, float importo, String luogo) {
-        Luogo = luogo;
+        Luogo=luogo;
         Categoria = categoria;
         Data = data;
         Importo = importo;

@@ -1,21 +1,10 @@
 package com.durante.fabrizio.myaccountant;
 
-import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.media.audiofx.BassBoost;
-import android.os.Build;
-import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -33,7 +22,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 public class NuovaOperazione extends AppCompatActivity {
 
@@ -44,6 +32,7 @@ public class NuovaOperazione extends AppCompatActivity {
     private Switch Tipo;
     private DBHelper MyDB;
     private GpsTracker gpsTracker;
+
     private int anno, mese, giorno;
     private static final int DIALOG_ID = 0;
     private DatePickerDialog.OnDateSetListener DatePikerListener = new DatePickerDialog.OnDateSetListener() {
@@ -55,7 +44,6 @@ public class NuovaOperazione extends AppCompatActivity {
             Data.setText(Integer.toString(giorno) + "/" + Integer.toString(mese) + "/" + Integer.toString(anno));
         }
     };
-
 
     @Override
     protected Dialog onCreateDialog(int id) {
@@ -91,6 +79,20 @@ public class NuovaOperazione extends AppCompatActivity {
                 String tipo;
                 String data = Data.getText().toString();
                 String luogo = Luogo.getText().toString();
+                Geocoder gc = new Geocoder(NuovaOperazione.this);
+                List<Address> list = null;
+                Address address;
+                String mem="";
+                if(luogo.length()>=0){
+                    try {
+                        list = gc.getFromLocationName(luogo, 1);
+                        address = list.get(0);
+                        double lat = address.getLatitude(), lng = address.getLongitude();
+                        mem = Double.toString(lat) + " " + Double.toString(lng);
+                    } catch (IOException e) {
+                        Toast.makeText(NuovaOperazione.this, "Non riesco a trovare il luogo inserito", Toast.LENGTH_SHORT).show();
+                    }
+                }
 
                 if (stringImp.length() <= 0) {
                     Toast.makeText(getApplicationContext(), "Inserire un importo", Toast.LENGTH_LONG).show();
@@ -118,9 +120,9 @@ public class NuovaOperazione extends AppCompatActivity {
                     tipo = "Entrata";
                 else {
                     tipo = "Uscita";
-                    Cursor check=MyDB.get_Conto(conto);
+                    Cursor check = MyDB.get_Conto(conto);
                     check.moveToFirst();
-                    if(imp>check.getFloat(1)){
+                    if (imp > check.getFloat(1)) {
                         Toast.makeText(getApplicationContext(),
                                 "L'importo inserito è manderebbe il saldo in negativo, sceglire un altro conto su cui addebitare questa spesa.",
                                 Toast.LENGTH_LONG).show();
@@ -128,7 +130,7 @@ public class NuovaOperazione extends AppCompatActivity {
                     }
                 }
 
-                if (MyDB.InsertPay(imp, data, luogo, tipo, conto))
+                if (MyDB.InsertPay(imp, data, mem, tipo, conto))
                     Toast.makeText(NuovaOperazione.this, "Operazione salvata!", Toast.LENGTH_LONG).show();
                 else
                     Toast.makeText(NuovaOperazione.this, "Impossibile memorizzare l'operazione", Toast.LENGTH_LONG).show();
@@ -220,7 +222,7 @@ public class NuovaOperazione extends AppCompatActivity {
                     Tipo.setChecked(false);
                 Data.setText(day);
             }
-            extra=null;
+            extra = null;
         }
 
         setListener();
