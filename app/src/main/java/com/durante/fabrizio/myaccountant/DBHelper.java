@@ -131,7 +131,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public boolean Aggiorna(int conto){
         SQLiteDatabase db=this.getWritableDatabase();
-        float entrate=0, uscite=0, bil;
+        float entrate, uscite, bil;
         Cursor ris=db.rawQuery("SELECT SUM(P."+PAY_IMPORTO+")\n" +
                 "FROM "+TABLE_PAY+" as P INNER JOIN "+TABLE_CONTO+" as C ON P."+PAY_EK+"=C."+CONTO_PK+"\n" +
                 "WHERE C."+CONTO_PK+"=? AND P."+PAY_CATEGORIA+"=?",
@@ -166,11 +166,12 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public boolean delete_Conto(int conto){
         SQLiteDatabase db=this.getWritableDatabase();
-        if(db.delete(TABLE_CONTO, CONTO_PK+"==?", new String[]{Integer.toString(conto)}) == 0 &&
-                db.delete(TABLE_PAY, PAY_EK+"=?", new String[]{Integer.toString(conto)}) == 0)
+        if(db.delete(TABLE_CONTO, CONTO_PK+"=?", new String[]{Integer.toString(conto)}) == 0)
             return false;
-        else
+        else {
+            db.delete(TABLE_PAY, PAY_EK + "=?", new String[]{Integer.toString(conto)});
             return true;
+        }
     }
 
     public Cursor get_Conto(int conto){

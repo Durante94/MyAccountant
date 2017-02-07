@@ -239,6 +239,7 @@ public class GpsTracker extends Service implements LocationListener {
             {
                 //e.printStackTrace();
                 Log.e("Error : Geocoder", "Impossible to connect to Geocoder", e);
+                Toast.makeText(context, "Impossible to connect to Geocoder: "+e, Toast.LENGTH_LONG).show();
             }
         }
         Toast.makeText(mContext, "Non risco a trovare la posizione, riprovare", Toast.LENGTH_LONG).show();

@@ -89,8 +89,13 @@ public class NuovaOperazione extends AppCompatActivity {
                         address = list.get(0);
                         double lat = address.getLatitude(), lng = address.getLongitude();
                         mem = Double.toString(lat) + " " + Double.toString(lng);
-                    } catch (IOException e) {
-                        Toast.makeText(NuovaOperazione.this, "Non riesco a trovare il luogo inserito", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        if(e instanceof IOException)
+                            Toast.makeText(NuovaOperazione.this, "Non riesco a trovare il luogo inserito", Toast.LENGTH_SHORT).show();
+                        else if(e instanceof IndexOutOfBoundsException) {
+                            //niente, se non c'è una posizione accade un IndexOutOfBoundsException perchè nessuna posizione è stata trovata
+                            // da salvare in address
+                        }
                     }
                 }
 

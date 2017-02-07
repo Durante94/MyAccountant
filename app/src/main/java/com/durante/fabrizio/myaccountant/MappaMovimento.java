@@ -72,10 +72,10 @@ public class MappaMovimento extends AppCompatActivity implements OnMapReadyCallb
             case R.id.cancel:{
                 if(db.delete_Mov(args.getInt("Movim"))){
                     Toast.makeText(getApplicationContext(), "Operazione cancellata", Toast.LENGTH_SHORT).show();
+                    db.Aggiorna(args.getInt("Conto"));
                     startActivity(new Intent(MappaMovimento.this, DettaglioConto.class).putExtra("Conto", args.getInt("Conto")));
                 }else
                     Toast.makeText(getApplicationContext(), "Cancellazione falita", Toast.LENGTH_SHORT).show();
-                db.Aggiorna(args.getInt("Conto"));
                 break;
             }
             case R.id.modifica:{
