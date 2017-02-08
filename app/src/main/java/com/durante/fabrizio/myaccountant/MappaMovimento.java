@@ -75,7 +75,7 @@ public class MappaMovimento extends AppCompatActivity implements OnMapReadyCallb
                     db.Aggiorna(args.getInt("Conto"));
                     startActivity(new Intent(MappaMovimento.this, DettaglioConto.class).putExtra("Conto", args.getInt("Conto")));
                 }else
-                    Toast.makeText(getApplicationContext(), "Cancellazione falita", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Cancellazione fallita", Toast.LENGTH_SHORT).show();
                 break;
             }
             case R.id.modifica:{

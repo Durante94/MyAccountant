@@ -44,7 +44,6 @@ public class DettaglioConto extends AppCompatActivity implements NavigationView.
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-    private static int conto;
     private static DBHelper db;
     private PlaceholderFragment def;
     private MovimentiConto tab;
@@ -54,6 +53,7 @@ public class DettaglioConto extends AppCompatActivity implements NavigationView.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dettaglio_conto);
+        args=getIntent().getExtras();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -84,18 +84,16 @@ public class DettaglioConto extends AppCompatActivity implements NavigationView.
             @Override
             public void onClick(View view) {
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                startActivity(new Intent(DettaglioConto.this, NuovaOperazione.class).putExtra("Conto", conto).putExtra("from", 2));
+                startActivity(new Intent(DettaglioConto.this, NuovaOperazione.class).putExtra("Conto", args.getInt("Conto")).putExtra("from", 2));
             }
         });
 
-        args=getIntent().getExtras();
         if(args!=null)
-            conto =args.getInt("Conto");
+            db=new DBHelper(this);
         else{
             Toast.makeText(this, "Non trovo il conto!", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(DettaglioConto.this, MainActivity.class));
         }
-        db=new DBHelper(this);
     }
 
     private Intent getParentActivityIntentImplement(){
@@ -143,7 +141,7 @@ public class DettaglioConto extends AppCompatActivity implements NavigationView.
                 ad.setButton(AlertDialog.BUTTON_POSITIVE, "SI", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(db.delete_Conto(conto)) {
+                        if(db.delete_Conto(args.getInt("Conto"))) {
                             startActivity(new Intent(DettaglioConto.this, MainActivity.class));
                             dialog.dismiss();
                         }else{
@@ -162,7 +160,7 @@ public class DettaglioConto extends AppCompatActivity implements NavigationView.
                 break;
             }
             case R.id.operazione:{
-                startActivity(new Intent(DettaglioConto.this, NuovaOperazione.class).putExtra("Conto", conto).putExtra("from", 2));
+                startActivity(new Intent(DettaglioConto.this, NuovaOperazione.class).putExtra("Conto", args.getInt("Conto")).putExtra("from", 2));
                 break;
             }
 
@@ -189,7 +187,7 @@ public class DettaglioConto extends AppCompatActivity implements NavigationView.
                         if(db.get_Conto(nome))
                             Toast.makeText(getApplicationContext(), nome+" è già in uso, sceglierne un altro", Toast.LENGTH_LONG).show();
                         else{
-                            if(db.update_Conto(conto, nome)){
+                            if(db.update_Conto(args.getInt("Conto"), nome)){
                                 Toast.makeText(getApplicationContext(), "Modifica effettuata", Toast.LENGTH_LONG).show();
                                 def.update_Nome(nome);
                                 dialog.dismiss();
@@ -260,15 +258,15 @@ public class DettaglioConto extends AppCompatActivity implements NavigationView.
         public Fragment getItem(int position) {
             switch (position){
                 case 0:{
-                    def= PlaceholderFragment.newInstance(conto);
+                    def= PlaceholderFragment.newInstance(args.getInt("Conto"));
                     return def;
                 }
                 case 1:{
-                    tab=MovimentiConto.newInstance(conto);
+                    tab=MovimentiConto.newInstance(args.getInt("Conto"));
                     return tab;
                 }
                 default:{
-                    def= PlaceholderFragment.newInstance(conto);
+                    def= PlaceholderFragment.newInstance(args.getInt("Conto"));
                     return def;
                 }
             }

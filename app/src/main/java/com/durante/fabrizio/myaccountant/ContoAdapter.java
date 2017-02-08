@@ -52,7 +52,8 @@ public class ContoAdapter extends BaseAdapter {
         }
         //musse per tagliare la stringa importo...
         pos=temp.indexOf(".");
-        temp=temp.substring(0, pos+2);
+        if(pos<temp.length()-2)
+            temp=temp.substring(0, pos+3);
 
         nomeC.setText(list.get(position).getNome());
         bilC.setText(temp+" €");

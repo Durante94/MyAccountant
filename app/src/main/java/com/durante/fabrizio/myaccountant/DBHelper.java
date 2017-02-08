@@ -103,7 +103,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public Cursor get_Conti(){
         SQLiteDatabase db=this.getWritableDatabase();
-        Cursor ris=db.rawQuery("SELECT "+CONTO_NOME+", "+CONTO_BIL_FIN+" FROM "+TABLE_CONTO+" ORDER BY ?", new String[]{CONTO_PK});
+        Cursor ris=db.rawQuery("SELECT "+CONTO_PK+", "+CONTO_NOME+", "+CONTO_BIL_FIN+" FROM "+TABLE_CONTO+" ORDER BY ?", new String[]{CONTO_PK});
         return ris;
     }
 
@@ -137,6 +137,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "WHERE C."+CONTO_PK+"=? AND P."+PAY_CATEGORIA+"=?",
                 new String[]{Integer.toString(conto), "Entrata"});
         ris.moveToFirst();
+        Toast.makeText(c, "somma entrate: "+ris.getFloat(0), Toast.LENGTH_LONG).show();
         entrate=ris.getFloat(0);
 
         ris=db.rawQuery("SELECT SUM(P."+PAY_IMPORTO+")\n" +
@@ -144,6 +145,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         "WHERE C."+CONTO_PK+"=? AND P."+PAY_CATEGORIA+"=?",
                 new String[]{Integer.toString(conto), "Uscita"});
         ris.moveToFirst();
+        Toast.makeText(c, "somma uscite: "+ris.getFloat(0), Toast.LENGTH_LONG).show();
         uscite=ris.getFloat(0);
 
         ris=db.rawQuery("SELECT "+CONTO_BIL_IN+"\n" +
@@ -154,7 +156,9 @@ public class DBHelper extends SQLiteOpenHelper {
             return false;
         }
 
+        Toast.makeText(c, "bilancio inizio: "+ris.getFloat(0), Toast.LENGTH_LONG).show();
         bil=ris.getFloat(0)+entrate-uscite;
+        Toast.makeText(c, "totale: "+bil, Toast.LENGTH_LONG).show();
 
         ContentValues cv=new ContentValues();
         cv.put(CONTO_BIL_FIN, bil);
@@ -196,6 +200,17 @@ public class DBHelper extends SQLiteOpenHelper {
             return true;
         else
             return false;
+    }
+
+    public int get_IDConto(int idMov){
+        SQLiteDatabase db=this.getWritableDatabase();
+        Cursor ris=db.rawQuery("SELECT "+PAY_EK+" FROM "+TABLE_PAY+" WHERE "+PAY_PK+"=?", new String[]{Integer.toString(idMov)});
+        if(ris.getCount()>0){
+            ris.moveToFirst();
+            return ris.getInt(0);
+        }else {
+            return -1;
+        }
     }
 
     public boolean update_Conto(int conto, String nome){

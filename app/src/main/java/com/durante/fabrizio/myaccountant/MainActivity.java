@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity
     private DBHelper MyDB;
     private ListView ElencoConti, UltimiMov;
     private TextView SaldoTot;
-    int[] idMov;
+    int[] idMov, idConti;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +71,12 @@ public class MainActivity extends AppCompatActivity
             ArrayAdapter<TextView> adapter=new ArrayAdapter<TextView>(this, R.layout.noconti_layout);
             ElencoConti.setAdapter(adapter);
         }else{
+            idConti=new int[righe.getCount()];
             ElementoListaConti temp;
             ArrayList<ElementoListaConti> lista=new ArrayList<ElementoListaConti>();
-            while (righe.moveToNext()){
-                temp=new ElementoListaConti(righe.getString(0), righe.getFloat(1));
+            for (int i=0; righe.moveToNext(); i++){
+                idConti[i]=righe.getInt(0);
+                temp=new ElementoListaConti(righe.getString(1), righe.getFloat(2));
                 lista.add(temp);
             }
             adpt=new ContoAdapter(getApplicationContext(), lista);
@@ -106,16 +108,19 @@ public class MainActivity extends AppCompatActivity
         ElencoConti.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Bundle bundle=new Bundle();
-                bundle.putString("Parent", "MainActivity");
-                startActivity(new Intent(MainActivity.this, DettaglioConto.class).putExtra("Conto", position+1));
+                startActivity(new Intent(MainActivity.this, DettaglioConto.class).putExtra("Conto", idConti[position]));
             }
         });
 
         UltimiMov.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(MainActivity.this, MappaMovimento.class).putExtra("Movim", idMov[position]));
+                int conto=MyDB.get_IDConto(idMov[position]);
+                if(conto==-1){
+                    Toast.makeText(getApplicationContext(), "Questo movimento non è associato a nessun conto!!", Toast.LENGTH_SHORT).show();
+                    return;
+                }else
+                    startActivity(new Intent(MainActivity.this, MappaMovimento.class).putExtra("Movim", idMov[position]).putExtra("Conto", conto));
             }
         });
     }

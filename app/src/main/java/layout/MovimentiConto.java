@@ -28,15 +28,18 @@ import java.util.List;
 
 public class MovimentiConto extends Fragment {
 
+    private static int Conto;
+
     public MovimentiConto() {
         // Required empty public constructor
     }
 
     public static MovimentiConto newInstance(int conto) {
         MovimentiConto fragment = new MovimentiConto();
-        Bundle args = new Bundle();
+        /*Bundle args = new Bundle();
         args.putInt("Conto", conto);
-        fragment.setArguments(args);
+        fragment.setArguments(args);*/
+        Conto=conto;
         return fragment;
     }
 
@@ -49,7 +52,7 @@ public class MovimentiConto extends Fragment {
         ListView elenco=(ListView)rootView.findViewById(R.id.lista_movimenti);
         DBHelper db=new DBHelper(getContext());
         MovimentiAdapter adapter;
-        final Cursor ris=db.get_Movim(getArguments().getInt("Conto"));
+        final Cursor ris=db.get_Movim(Conto);
         if(ris.getCount()<=0){
             Toast.makeText(getContext(), "Nessun movimento!", Toast.LENGTH_LONG).show();
             return null;
@@ -86,7 +89,7 @@ public class MovimentiConto extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(ris.moveToPosition(position)) {
                     int id_Mov=ris.getInt(0);
-                    startActivity(new Intent(getContext(), MappaMovimento.class).putExtra("Movim", id_Mov).putExtra("Conto", getArguments().getInt("Conto")));
+                    startActivity(new Intent(getContext(), MappaMovimento.class).putExtra("Movim", id_Mov).putExtra("Conto", Conto));
                 }
             }
         });

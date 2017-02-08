@@ -32,6 +32,7 @@ public class NuovaOperazione extends AppCompatActivity {
     private Switch Tipo;
     private DBHelper MyDB;
     private GpsTracker gpsTracker;
+    private Bundle extra;
 
     private int anno, mese, giorno;
     private static final int DIALOG_ID = 0;
@@ -44,6 +45,16 @@ public class NuovaOperazione extends AppCompatActivity {
             Data.setText(Integer.toString(giorno) + "/" + Integer.toString(mese) + "/" + Integer.toString(anno));
         }
     };
+    int[] idConti;
+
+    private int getPosizione(int[] a, int val){
+        for(int i=0; i<a.length; i++){
+            if(a[i]==val){
+                return i;
+            }
+        }
+        return -1;
+    }
 
     @Override
     protected Dialog onCreateDialog(int id) {
@@ -75,7 +86,7 @@ public class NuovaOperazione extends AppCompatActivity {
             public void onClick(View v) {
                 String stringImp = Importo.getText().toString();
                 float imp;
-                int conto = Conti.getSelectedItemPosition();
+                int conto;
                 String tipo;
                 String data = Data.getText().toString();
                 String luogo = Luogo.getText().toString();
@@ -100,26 +111,28 @@ public class NuovaOperazione extends AppCompatActivity {
                 }
 
                 if (stringImp.length() <= 0) {
-                    Toast.makeText(getApplicationContext(), "Inserire un importo", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Inserire un importo", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
                     try {
                         imp = Float.parseFloat(stringImp);
                     } catch (NumberFormatException e) {
-                        Toast.makeText(getApplicationContext(), "Formato importo errato, reinserire", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Formato importo errato, reinserire", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
-                if (conto <= 0) {
-                    Toast.makeText(getApplicationContext(), "Scegliere un conto su cui legare l'operazione", Toast.LENGTH_LONG).show();
+                if (Conti.getSelectedItemPosition() <= 0) {
+                    Toast.makeText(getApplicationContext(), "Scegliere un conto su cui legare l'operazione", Toast.LENGTH_SHORT).show();
                     return;
+                }else {
+                    conto = idConti[Conti.getSelectedItemPosition()-1];
                 }
                 if (data.length() <= 0) {
-                    Toast.makeText(getApplicationContext(), "Inserire una data", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Inserire una data", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (luogo.length() <= 0) {
-                    Toast.makeText(getApplicationContext(), "Attenzione! Non hai inserito la posizione del pagamento", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Attenzione! Non hai inserito la posizione del pagamento", Toast.LENGTH_SHORT).show();
                 }
                 if (Tipo.isChecked())
                     tipo = "Entrata";
@@ -136,9 +149,9 @@ public class NuovaOperazione extends AppCompatActivity {
                 }
 
                 if (MyDB.InsertPay(imp, data, mem, tipo, conto))
-                    Toast.makeText(NuovaOperazione.this, "Operazione salvata!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(NuovaOperazione.this, "Operazione salvata!", Toast.LENGTH_SHORT).show();
                 else
-                    Toast.makeText(NuovaOperazione.this, "Impossibile memorizzare l'operazione", Toast.LENGTH_LONG).show();
+                    Toast.makeText(NuovaOperazione.this, "Impossibile memorizzare l'operazione", Toast.LENGTH_SHORT).show();
                 MyDB.Aggiorna(conto);
             }
         });
@@ -190,15 +203,15 @@ public class NuovaOperazione extends AppCompatActivity {
         giorno = cal.get(Calendar.DAY_OF_MONTH);
 
         Cursor ris = MyDB.get_Conti();
-        Bundle extra = getIntent().getExtras();
+        extra = getIntent().getExtras();
 
         if (!(ris.getCount() <= 0 || ris == null)) {
-            String temp;
+            idConti=new int[ris.getCount()];
             ArrayList<String> list = new ArrayList<String>();
             list.add("Seleziona un conto");
-            while (ris.moveToNext()) {
-                temp = ris.getString(0);
-                list.add(temp);
+            for (int i=0; ris.moveToNext(); i++) {
+                idConti[i]=ris.getInt(0);
+                list.add(ris.getString(1));
             }
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.elemento_nome_conti, list);
             Conti.setAdapter(adapter);
@@ -210,8 +223,13 @@ public class NuovaOperazione extends AppCompatActivity {
 
         if (extra != null) {
 
-            int conto = extra.getInt("Conto");
-            Conti.setSelection(conto);
+            int conto = getPosizione(idConti ,extra.getInt("Conto"));
+
+            if(conto==-1)
+                Toast.makeText(getApplicationContext(), "Conto inesistente", Toast.LENGTH_SHORT).show();
+            else
+                Conti.setSelection(conto+1);
+
             if (extra.getInt("from") == 1) {
                 float imp = extra.getFloat("Importo");
                 int tipo = extra.getInt("Tipo");
@@ -227,7 +245,6 @@ public class NuovaOperazione extends AppCompatActivity {
                     Tipo.setChecked(false);
                 Data.setText(day);
             }
-            extra = null;
         }
 
         setListener();
