@@ -1,13 +1,16 @@
 package com.durante.fabrizio.myaccountant;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
@@ -90,76 +93,68 @@ public class DebCredActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                int tipo=Tipi.getSelectedItemPosition();
-                int conto=Conti.getSelectedItemPosition();
-                String imp=Import.getText().toString();
-                String day=VisualData.getText().toString();
-                float imp2=0;
+                int tipo = Tipi.getSelectedItemPosition();
+                int conto = Conti.getSelectedItemPosition();
+                String imp = Import.getText().toString();
+                String day = VisualData.getText().toString();
+                float imp2 = 0;
 
-                if(tipo<1){
+                if (tipo < 1) {
                     Toast.makeText(getApplicationContext(), "Selezionare se debito o credito", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(conto<1){
+                if (conto < 1) {
                     Toast.makeText(getApplicationContext(), "Selezionare il conto da associare", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(imp.length()<=0){
+                if (imp.length() <= 0) {
                     Toast.makeText(getApplicationContext(), "Inserire un importo", Toast.LENGTH_SHORT).show();
                     return;
-                }else{
-                    try{
-                        imp2=Float.parseFloat(imp);
-                    }catch (NumberFormatException e){
+                } else {
+                    try {
+                        imp2 = Float.parseFloat(imp);
+                    } catch (NumberFormatException e) {
                         Toast.makeText(getApplicationContext(), "Non sono riuscito a convertire l'importo", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    if(imp2<0){
+                    if (imp2 < 0) {
                         Toast.makeText(getApplicationContext(), "L'importo non può essere negativo", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
-                if(day.length()<0){
+                if (day.length() < 0) {
                     Toast.makeText(getApplicationContext(), "Inserire una data per la notifica", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
+                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
                 Calendar cal;
                 Date oggi, when;
 
-                try{
-                    when=format.parse(day);
-                }catch (ParseException e){
+                try {
+                    when = format.parse(day);
+                } catch (ParseException e) {
                     Toast.makeText(DebCredActivity.this, "Non riesco a convertire la data", Toast.LENGTH_LONG).show();
                     return;
                 }
-                oggi=new Date();
-                cal=Calendar.getInstance();
+                oggi = new Date();
+                cal = Calendar.getInstance();
                 cal.setTime(when);
-                long quando=cal.getTimeInMillis();
+                long quando = cal.getTimeInMillis();
                 cal.setTime(oggi);
-                long diff=quando-cal.getTimeInMillis();
+                long diff = quando - cal.getTimeInMillis();
 
-                Intent proxOperazione=new Intent(DebCredActivity.this, NuovaOperazione.class)
+                Intent proxOperazione = new Intent(DebCredActivity.this, NuovaOperazione.class)
                         .putExtra("Importo", imp2)
                         .putExtra("Conto", conto)
                         .putExtra("Tipo", tipo)
                         .putExtra("Data", day)
                         .putExtra("from", 1);
-                PendingIntent pi=PendingIntent.getActivity(DebCredActivity.this, 0, proxOperazione, 0);
-                NotificationManager notify=(NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-                NotificationCompat.Builder n= (NotificationCompat.Builder) new NotificationCompat.Builder(DebCredActivity.this)
-                        .setContentTitle("Promemoria")
-                        .setContentText("Hai un operazione da approvare oggi")
-                        .setSmallIcon(R.drawable.ic_menu_send)
-                        .setAutoCancel(true);
-                Uri suono= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                n.setSound(suono);
-                n.setContentIntent(pi);
-                if(diff>0)
-                    n.setWhen(diff);
-                notify.notify(0, n.build());
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, proxOperazione, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                long futureInMillis = SystemClock.elapsedRealtime() + diff;
+                AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+                alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
             }
         });
 

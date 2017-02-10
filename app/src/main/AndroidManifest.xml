@@ -77,7 +77,6 @@
         </activity>
         <activity
             android:name=".MappaMovimento"
-            android:parentActivityName=".DettaglioConto"
             android:label="Dettaglio Movimento">
             <intent-filter>
                 <action android:name="com.durante.fabrizio.myaccountant.MappaMovimento"/>
