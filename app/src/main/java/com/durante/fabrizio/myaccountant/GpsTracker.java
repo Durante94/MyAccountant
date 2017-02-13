@@ -252,6 +252,7 @@ public class GpsTracker extends Service implements LocationListener {
      */
     public String getAddressLine(Context context)
     {
+
         List<Address> addresses = getGeocoderAddress(context);
         if (addresses != null && addresses.size() > 0)
         {
