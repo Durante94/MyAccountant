@@ -11,15 +11,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
+import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.DataPointInterface;
-import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.OnDataPointTapListener;
 import com.jjoe64.graphview.series.Series;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by Fabrizio on 09/01/2017.
@@ -53,8 +56,7 @@ public class PlaceholderFragment extends Fragment {
         graph = (GraphView)rootView.findViewById(R.id.graph);
         DBHelper db=new DBHelper(getContext());
 
-        Calendar calendar = Calendar.getInstance();
-        DateFormat formatter = new SimpleDateFormat("dd/MM/yy");
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
         Cursor ris=db.get_Conto(getArguments().getInt("Conto"));
         if(!ris.moveToFirst()){
@@ -68,17 +70,38 @@ public class PlaceholderFragment extends Fragment {
         if(scanMovim.getCount()<=0){
             return rootView;
         }
+        Date date1=null, date2=null, date3=null;
 
-        LineGraphSeries<DataPoint> series = new LineGraphSeries();
-        DataPoint [] point=new DataPoint[scanMovim.getCount()];
-        for(int i=0; i<=point.length && scanMovim.moveToNext(); i++){
-            //carica date sulle x e importi sulle y, il primo importo deve essere il bilancio iniziale
-            //codice utile:
-                //Date date = formatter.parse("01/29/02");
-                //Calendar calendar = Calendar.getInstance();
-                //calendar.setTime(date);
-                //
+        try {
+            date1 = formatter.parse("10/02/2017");
+            date2 = formatter.parse("11/02/2017");
+            date3 = formatter.parse("13/02/2017");
+        }catch (ParseException e){
+            e.printStackTrace();
         }
+
+        BarGraphSeries<DataPoint> series = new BarGraphSeries(new DataPoint[]{
+                new DataPoint(date1, 1),
+                new DataPoint(date2, 5),
+                new DataPoint(date3, 3)
+        });
+        /*DataPoint [] point=new DataPoint[scanMovim.getCount()];
+        Date date, lastData, firstData;
+        double imp;
+        for(int i=0; i<point.length && scanMovim.moveToNext(); i++){
+            try {
+                date = formatter.parse(scanMovim.getString(2));
+            } catch (ParseException e) {
+                Toast.makeText(getContext(), "Impossibile parsare la data: "+scanMovim.getString(2), Toast.LENGTH_SHORT).show();
+                return rootView;
+            }
+            if(i==0)
+                firstData=date;
+            if(i==scanMovim.getCount()-1)
+                lastData=date;
+            imp=scanMovim.getDouble(1);
+            point[i]=new DataPoint(date, imp);
+        }*/
 
         //series.appendData();
 
@@ -96,10 +119,10 @@ public class PlaceholderFragment extends Fragment {
 // activate vertical scrolling
         graph.getViewport().setScrollableY(true);
 
-        // set manual X bounds
+        // set manual x bounds to have nice steps
+        //graph.getViewport().setMinX(firstData);
+        //graph.getViewport().setMaxX(lastData);
         graph.getViewport().setXAxisBoundsManual(true);
-        graph.getViewport().setMinX(0); //gestire range di date da cui visulaizzare
-        graph.getViewport().setMaxX(3.5);
 
 // set manual Y bounds
         graph.getViewport().setYAxisBoundsManual(true);
@@ -108,13 +131,17 @@ public class PlaceholderFragment extends Fragment {
 
         graph.getGridLabelRenderer().setHorizontalAxisTitle("Data");
         graph.getGridLabelRenderer().setVerticalAxisTitle("Saldo");
+        // set date label formatter
+        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity()));
+        graph.getGridLabelRenderer().setNumHorizontalLabels(3); // only 4 because of the space
 
         // styling series
         series.setTitle(ris.getString(0));
         series.setColor(Color.BLUE);
-        series.setDrawDataPoints(true);
-        series.setDataPointsRadius(12);
-        series.setThickness(10);
+
+        // draw values on top
+        series.setDrawValuesOnTop(true);
+        series.setValuesOnTopColor(Color.RED);
 
         series.setOnDataPointTapListener(new OnDataPointTapListener() {
             @Override
